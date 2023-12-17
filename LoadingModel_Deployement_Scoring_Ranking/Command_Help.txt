@@ -36,7 +36,13 @@ You can get it by:
 4. Enable the API: In the library, navigate to YouTube Data API v3 under YouTube APIs. Make sure the status is ON for the YouTube Data API v3.
 5. Create a Credential: A screen will appear with the API key.
 
-Running on local servers
+Running on local servers with front-end
+In terminal:
+uvicorn sample_rest_server:app --reload
+Open index.html in microsoft edge(right click on index.html and select openwith microsoft edge)
+not chrome as speaking out feature is disabled in chrome after sometime i don't know why will very make available for chrome also.
+
+Running on local servers without front-end
 In terminal:
 uvicorn sample_rest_server:app --reload
 In browser: 
