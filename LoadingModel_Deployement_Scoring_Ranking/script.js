@@ -3,8 +3,11 @@ let utterance = new SpeechSynthesisUtterance();
 
 const speakButton = document.getElementById('speakButton');
 const resultDiv = document.getElementById('result');
+const queryDiv = document.getElementById('query'); 
 
 speakButton.addEventListener('click', function() {
+    utterance.text = 'Speak now.';
+    window.speechSynthesis.speak(utterance);
     const recognition = new window.webkitSpeechRecognition();
     recognition.interimResults = true;
     recognition.lang = 'en-US';
@@ -18,6 +21,19 @@ speakButton.addEventListener('click', function() {
         if (event.results[0].isFinal) {
             // Clear previous results
             resultDiv.innerHTML = '';
+            // Announce that the search results are being fetched
+            utterance.text = `Searching results for ${transcript}.`;
+            window.speechSynthesis.speak(utterance);
+            // Display the query and make it clickable
+            queryDiv.textContent = `Query: ${transcript}`;
+            queryDiv.addEventListener('click', function() {
+                if (window.speechSynthesis.speaking) {
+                    window.speechSynthesis.cancel();
+                } else {
+                    utterance.text = `Your query is ${transcript}`;
+                    window.speechSynthesis.speak(utterance);
+                }
+            });
 
             fetch('http://127.0.0.1:8000/rerank/', {
                 method: 'POST',
@@ -77,5 +93,5 @@ speakButton.addEventListener('click', function() {
     });
 
     // Start the speech recognition
-    recognition.start();
+    setTimeout(() => recognition.start(), 50);
 });
