@@ -79,7 +79,7 @@ speakButton.addEventListener('click', function() {
                         }
                         setTimeout(function() {
                             window.location.href = item.url;
-                        }, 200); // Delay of 200 milliseconds
+                        }, 1000); // Delay of 1000 milliseconds
                     });
 
                     // Append the item div to the result div
