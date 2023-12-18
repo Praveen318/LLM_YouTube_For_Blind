@@ -101,3 +101,44 @@ E.g docker push testfastapiarticle.azurecr.io/testfastapi2:v2
 
 Running from cloud
 http://pssm318.azurewebsites.net/rerank/?query=palak&count=2
+
+
+Step-by-step guide when deploying with front-end:
+
+1. Modify your JavaScript code: Replace the hardcoded URL in your fetch command with an environment variable. For example:
+JavaScript
+
+let BASE_URL = process.env.BASE_URL || 'http://localhost:8000';
+
+fetch(`${BASE_URL}/rerank/`, {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ query: transcript, count: 5 })
+})
+In this code, process.env.BASE_URL will be the URL of your deployed application when running in Azure, 
+and 'http://localhost:8000' when running locally.
+
+2. Build your Docker image: Include your updated JavaScript code in the Docker image. If all your files (HTML, CSS, JS, and Python) 
+are in the same directory, your Dockerfile would look something like this:
+FROM python:3.10
+
+WORKDIR /app
+COPY . /app
+RUN pip install -r requirements.txt
+
+CMD [ "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80" ]
+
+This Dockerfile copies everything from your current directory (including your HTML, CSS, JS, and Python files) 
+into the /app directory in the Docker image.
+
+3. Push your Docker image to a registry: After building your Docker image, 
+you can push it to a Docker registry such as Docker Hub or Azure Container Registry.
+
+4. Create an Azure App Service: In the Azure portal, create a new App Service and configure it 
+to use the Docker image you just pushed to the registry.
+
+5. Set the BASE_URL environment variable in Azure: In the Azure portal, navigate to your App Service, then go to the “Configuration” page. 
+In the “Application settings” section, click “New application setting”. 
+Enter BASE_URL as the name and the URL of your App Service as the value

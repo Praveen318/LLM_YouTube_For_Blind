@@ -6,6 +6,7 @@ const resultDiv = document.getElementById('result');
 const queryDiv = document.getElementById('query'); 
 
 speakButton.addEventListener('click', function() {
+    window.speechSynthesis.cancel();
     utterance.text = 'Speak now.';
     window.speechSynthesis.speak(utterance);
     const recognition = new window.webkitSpeechRecognition();
@@ -34,8 +35,8 @@ speakButton.addEventListener('click', function() {
                     window.speechSynthesis.speak(utterance);
                 }
             });
-
-            fetch('http://127.0.0.1:8000/rerank/', {
+            
+            fetch('http://localhost:8000/rerank/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -71,15 +72,10 @@ speakButton.addEventListener('click', function() {
 
                     // Add a double click event listener to navigate to the item URL
                     itemDiv.addEventListener('dblclick', function() {
-                        if (window.speechSynthesis.speaking) {
-                            window.speechSynthesis.cancel();
-                        } else {
-                            utterance.text = itemDiv.textContent;
-                            window.speechSynthesis.speak(utterance);
-                        }
+                        window.speechSynthesis.cancel();
                         setTimeout(function() {
                             window.location.href = item.url;
-                        }, 1000); // Delay of 1000 milliseconds
+                        }, 1000); // Delay of 200 milliseconds
                     });
 
                     // Append the item div to the result div
@@ -93,5 +89,5 @@ speakButton.addEventListener('click', function() {
     });
 
     // Start the speech recognition
-    setTimeout(() => recognition.start(), 50);
+    setTimeout(() => recognition.start(), 1000);
 });
